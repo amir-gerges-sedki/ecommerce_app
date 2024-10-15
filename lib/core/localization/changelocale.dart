@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:master_store/view/widgets/Buttonlang.dart';
+
+import 'package:master_store/common/buttonlang.dart';
 
 class ChangeLocal extends StatelessWidget {
   const ChangeLocal({super.key});
@@ -11,9 +12,14 @@ class ChangeLocal extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ButtonLang(lang: 'Ar',onPressed: () {},),
-            ButtonLang(lang: 'En',onPressed: () {},),
-            
+            ButtonLang(
+              lang: 'Ar',
+              onPressed: () {},
+            ),
+            ButtonLang(
+              lang: 'En',
+              onPressed: () {},
+            ),
           ],
         ),
       ),

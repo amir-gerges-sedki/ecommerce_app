@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:master_store/controller/auth/auth_firebase_controller.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:master_store/binding/general_binding.dart';
+import 'package:master_store/core/theme/app_theme.dart';
 import 'package:master_store/core/localization/locale.dart';
 import 'package:master_store/core/localization/localecontroller.dart';
 import 'package:master_store/core/services/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:master_store/data/repositories/authentication/authentication_repo.dart';
+import 'package:master_store/firebase_options.dart';
 import 'package:master_store/routes.dart';
-import 'package:master_store/view/screens/auth/login_screen.dart';
-import 'firebase_options.dart';
+import 'package:master_store/view/shop/screen/navAppbar/bottom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   await initServices();
+  Get.put(LocaleController());
+
+  FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
+
   await Firebase.initializeApp(
-    name: 'fir-test-b43d4',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+          name: 'fir-test-b43d4',
+          options: DefaultFirebaseOptions.currentPlatform)
+      .then((FirebaseApp val) => Get.put(AuthenticationRepository()));
 
   runApp(const MyApp());
 }
@@ -25,29 +35,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LocaleController controller = Get.put(LocaleController());
-    AuthController controllerr = Get.put(AuthController());
+
     return GetMaterialApp(
+      initialBinding: GeneralBinding(),
       translations: MyTranslation(),
-      onInit: controllerr.initAuth(),
       debugShowCheckedModeBanner: false,
       locale: controller.language,
-      title: 'Master Store',
-      theme: ThemeData(
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          bodyMedium: TextStyle(
-              height: 2,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-              fontSize: 15),
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      // initialRoute: FirebaseAuth.instance.currentUser == null
-      //     ? "/loginscreen"
-      //     : "/homescreen",
-      home: const Login(),
+      theme: AppTheme.darkMode,
+      home: const BottomNavBar(),
       getPages: routes,
     );
   }

@@ -2,7 +2,9 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id 'com.google.gms.google-services'
+    id "com.google.gms.google-services"
+    // id("com.google.gms.google-services") version "4.3.15" apply true
+    id 'org.jetbrains.kotlin.android' version '2.0.0'
 }
 
 def localProperties = new Properties()
@@ -13,21 +15,12 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '1')
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0')
 
 android {
     namespace "com.example.master_store"
-    compileSdkVersion flutter.compileSdkVersion
-    // ndkVersion flutter.ndkVersion
-    ndkVersion "25.1.8937393"
+    compileSdkVersion 34  // Updated compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -42,28 +35,37 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+   
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.master_store"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 22
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 23
+        targetSdkVersion 34  // Updated targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
+
+    ndkVersion "25.1.8937393"  // Added NDK version
 }
 
 flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10"
+    implementation platform("com.google.firebase:firebase-bom:33.1.0")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    
+}
+
+// Apply the Google services plugin
+apply plugin: 'com.google.gms.google-services'
